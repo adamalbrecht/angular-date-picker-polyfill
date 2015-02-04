@@ -1,0 +1,66 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+  <title>Angular Date Input Polyfill</title>
+  <link rel="stylesheet" type="text/css" href="../dist/angular-date-picker-polyfill.css">
+  <style type="text/css" media="all">
+    body { font-family: arial; }
+  </style>
+</head>
+<body data-ng-app='DemoApp'>
+  <div data-ng-controller='DemoController'>
+    <form name='myForm' no-validate>
+      <p>
+        <label>Calendar Field</label>
+        <div aa-calendar ng-model='myCalendarDate'></div>
+      <p>
+        <label>My Date Field</label>
+        <input type='date' data-ng-model='myDate' />
+      </p>
+      <p>
+        <label>My Date/Time Field</label>
+        <input type='datetime-local' data-ng-model='myDateTime' />
+      </p>
+    </form>
+    <br/>
+    <strong>Raw Values:</strong>
+    <ul>
+      <li>My Calendar Field: {{myCalendarDate}}</li>
+      <li>My Date Field: {{myDate}}</li>
+      <li>My Date/Time Field: {{myDateTime}}</li>
+    </ul>
+    <strong>Model Types:</strong>
+    <ul>
+      <li>My Calendar Field: {{displayType(myCalendarDate)}}</li>
+      <li>My Date Field: {{displayType(myDate)}}</li>
+      <li>My Date/Time Field: {{displayType(myDateTime)}}</li>
+    </ul>
+  </div>
+  <script src="../vendor/bower/angular/angular.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../dist/angular-date-picker-polyfill.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8">
+    var app = angular.module('DemoApp', ['angular-date-picker-polyfill']);
+    app.controller('DemoController', function($scope) {
+      $scope.myCalendarDate = new Date(2014, 10, 1);
+      $scope.myDate = null
+      $scope.myDateTime = null
+      $scope.displayType = function(model) {
+        var rawType = typeof(model);
+        if ((model == null) || (model == undefined)) {
+          return 'null'
+        }
+        if (rawType == 'object') {
+          if (angular.isDate(model)) {
+            return 'date'
+          } else {
+            return rawType;
+          }
+        } else {
+          return rawType;
+        }
+      };
+    });
+  </script>
+</body>
+</html>

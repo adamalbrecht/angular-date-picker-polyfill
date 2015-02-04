@@ -1,0 +1,82 @@
+// Colors
+$medium-gray: #ccc !default;
+$light-gray: lighten($medium-gray, 10%) !default;
+$primary-text-color: #333 !default;
+$selected-text-color: #000 !default;
+$disabled-text-color: #999 !default;
+$disabled-bg-color: #eee !default;
+
+// Fonts
+$font-family: inherit !default;
+$font-size: auto !default;
+
+// Border Colors
+$light-border-color: $light-gray !default;
+$medium-border-color: $medium-gray !default;
+
+// Calendar Title Bar
+$cal-min-width: 250px !default;
+$controls-bg-color: #fff !default;
+$controls-text-color: $primary-text-color !default;
+$controls-padding: 0 0 5px !default;
+
+// Calendar Title
+$month-name-font-size: $font-size !default;
+$month-name-padding: 5px 10px 2px !default;
+
+// Next, Prev Arrow Buttons
+$arrow-font-size: 1.1em !default;
+$arrow-padding: 3px 7.5px !default;
+$arrow-color: $primary-text-color !default;
+$arrow-border: none !default;
+$arrow-bg-color: inherit !default;
+$arrow-hover-bg-color: $disabled-bg-color !default;
+$arrow-hover-border: none !default;
+
+// Calendar wrapper
+$calendar-wrapper-padding: 5px;
+$calendar-border: none !default;
+$calendar-bg: #fff !default;
+
+// Header Row (days of the week)
+$header-row-color: $primary-text-color !default;
+$header-row-bg-color: #fff !default;
+$header-row-font-weight: bold !default;
+
+// Basic Date Cells
+$cell-color: $primary-text-color !default;
+$cell-bg-color: #fff !default;
+$cell-padding: 5px !default;
+$cell-border-color: $light-border-color !default;
+$cell-hover-bg-color: darken($cell-bg-color, 10%) !default;
+
+// Selected Date Cell
+$selected-cell-color: $selected-text-color !default;
+$selected-cell-bg-color: $cell-bg-color !default;
+$selected-cell-font-weight: normal !default;
+$selected-cell-inner-border-color: $cell-bg-color !default;
+$selected-cell-hover-bg-color: darken($selected-cell-bg-color, 10%) !default;
+$selected-cell-hover-inner-border-color: darken($selected-cell-inner-border-color, 10%) !default;
+
+// Date Cell for next/prev month
+$other-month-cell-color: $disabled-text-color !default;
+$other-month-cell-bg-color: $disabled-bg-color !default;
+$other-month-cell-font-weight: normal !default;
+$other-month-cell-hover-bg-color: darken($other-month-cell-bg-color, 10%) !default;
+
+// Disabled date cell
+$disabled-cell-color: $disabled-text-color !default;
+$disabled-cell-bg-color: $disabled-bg-color !default;
+$disabled-cell-font-weight: normal !default;
+$disabled-cell-hover-bg-color: $disabled-cell-bg-color !default;
+
+// Today date cell
+$today-cell-color: $cell-color !default;
+$today-cell-bg-color: $cell-bg-color !default;
+$today-cell-font-weight: bold !default;
+$today-cell-hover-bg-color: darken($today-cell-bg-color, 10%);
+
+// Popup
+$popup-bg-color: #fff !default;
+$popup-padding: 10px !default;
+$popup-border: solid 1px $light-gray !default;

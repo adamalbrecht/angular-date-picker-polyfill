@@ -1,0 +1,149 @@
+// Calendar Wrapper
+.aa-cal {
+  padding: $calendar-wrapper-padding;
+  border: solid 1px $light-border-color;
+  display: inline-block;
+  font-family: $font-family;
+  font-size: $font-size;
+  position: relative;
+
+  // Contains the month name and buttons
+  &-controls {
+    background-color: $controls-bg-color;
+    color: $controls-text-color;
+    min-width: $cal-min-width;
+    padding: $controls-padding;
+    text-align: center;
+    vertical-align: middle;
+  }
+ 
+  // Buttons shown at the top
+  &-btn {
+    background-color: $arrow-bg-color;
+    border: $arrow-border;
+    cursor: pointer;
+    display: inline-block;
+    font-size: $arrow-font-size;
+    padding: $arrow-padding;
+    &:hover {
+      background-color: $arrow-hover-bg-color;
+      border: $arrow-hover-border;
+    }
+  }
+  // Name of the month
+  &-month-name {
+    display: inline-block;
+    font-size: $month-name-font-size;
+    padding: $month-name-padding;
+    text-align: center;
+  }
+  &-prev-month, &-prev-year { float: left; }
+  &-next-month, &-next-year { float: right; }
+  &-next-month:before { content: "\203A"; }
+  &-prev-month:before { content: "\2039"; }
+  &-next-year:before { content: "\00bb"; }
+  &-prev-year:before { content: "\00ab"; }
+  &-set-to-today:before { content: "\29be" }
+  &-set-to-today { display: none; }
+}
+
+// Calendar Table
+table.aa-cal-month {
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+  display: block;
+  min-width: $cal-min-width;
+
+ 
+  // Calenadr Table Cells
+  td,
+  th {
+    border: 1px solid $cell-border-color;
+    margin: 0;
+    padding: $cell-padding;
+    text-align: center;
+    vertical-align: middle;
+  }
+  th {
+    background-color: $header-row-bg-color;
+    color: $header-row-color;
+    font-weight: $header-row-font-weight;
+    padding: $cell-padding;
+  }
+
+  td {
+    background-color: $cell-bg-color;
+    color: $cell-color;
+    cursor: pointer;
+    // Dates from the previous or next month
+    // that show up in the first and last week
+    &.aa-cal-other-month {
+      color: $other-month-cell-color;
+      background-color: $other-month-cell-bg-color;
+      font-weight: $other-month-cell-font-weight;
+      span {
+        border: 1px solid $other-month-cell-bg-color;
+      }
+      &:hover {
+        background-color: $other-month-cell-hover-bg-color;
+        span { border-color: $other-month-cell-hover-bg-color; }
+      }
+    }
+    // The selected date
+    &.aa-cal-selected {
+      color: $today-cell-color;
+      background-color: $today-cell-bg-color;
+      font-weight: $today-cell-font-weight;
+      span {
+        border: 1px solid $selected-cell-inner-border-color;
+      }
+    }
+    // Todays date
+    &.aa-cal-today {
+      color: $today-cell-color;
+      background-color: $today-cell-bg-color;
+      font-weight: $today-cell-font-weight;
+
+      span {
+        border: 1px solid $today-cell-bg-color;
+      }
+
+      &:hover {
+        background-color: $today-cell-hover-bg-color;
+        span { border-color: $today-cell-hover-bg-color; }
+      }
+      // Todays date AND selected
+      &.q-calendar-selected {
+        color: $selected-cell-color;
+        background-color: $cell-bg-color;
+        font-weight: $selected-cell-font-weight;
+        span {
+          border: 1px solid $selected-cell-inner-border-color;
+        }
+        &:hover {
+          background-color: $selected-cell-hover-bg-color;
+          span { border-color: $selected-cell-hover-inner-border-color; }
+        }
+      }
+    }
+    // Dates that have been disabled
+    &.aa-cal-disabled {
+      cursor: default;
+      color: $disabled-cell-color;
+      background-color: $disabled-cell-bg-color;
+      font-weight: $disabled-cell-font-weight;
+      span {
+        border: 1px solid $disabled-cell-bg-color;
+      }
+      &:hover {
+        background-color: $disabled-cell-hover-bg-color;
+        span { border-color: $disabled-cell-hover-bg-color; }
+      }
+    }
+    &:hover {
+      background-color: $cell-hover-bg-color;
+      span { border-color: $cell-hover-bg-color; }
+    }
+  }
+}
