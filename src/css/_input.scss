@@ -1,3 +1,17 @@
 .aa-date-input {
-  display: inline;
+  display: inline-block;
+  position: relative;
+}
+
+.aa-date-input-cover {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  z-index: 1;
+  width: 100%;
+  background-color: #fff;
+  border: solid 1px $medium-gray;
+  padding: 2px 5px;
 }

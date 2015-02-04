@@ -68,6 +68,19 @@
           return false;
         }
         return (d1.getFullYear() === d2.getFullYear()) && (d1.getMonth() === d2.getMonth());
+      },
+      convertToDate: function(val) {
+        var d;
+        if (angular.isDate(val)) {
+          return val;
+        } else {
+          d = Date.parse(val);
+          if (angular.isDate(d)) {
+            return d;
+          } else {
+            return null;
+          }
+        }
       }
     };
   });
@@ -75,28 +88,101 @@
 }).call(this);
 
 (function() {
-  angular.module('angular-date-picker-polyfill').directive('input', function() {
+  angular.module('angular-date-picker-polyfill').directive('aaDatepickerInput', ["$compile", "aaDateUtil", function($compile, aaDateUtil) {
     return {
-      restrict: 'E',
+      restrict: 'A',
       require: '^ngModel',
+      scope: {
+        ngModel: '='
+      },
       link: function(scope, elem, attrs, ngModelCtrl) {
-        if (attrs.type !== 'date') {
-          return;
-        }
-        elem.wrap("<div class='aa-date-input'></div>");
-        ngModelCtrl.$parsers.push(function(viewVal) {
-          console.log('ViewVal:', viewVal, typeof viewVal);
-          console.log('Is ViewVal Date? ', angular.isDate(viewVal));
-          return viewVal;
-        });
-        return ngModelCtrl.$formatters.push(function(modelVal) {
-          console.log('ModelVal:', modelVal, typeof modelVal);
-          console.log('Is ModelVal Date? ', angular.isDate(modelVal));
-          return modelVal;
-        });
+        var compileTemplate, init, setupNonInputEvents, setupNonInputValidatorAndFormatter, setupPopupTogglingEvents, setupViewActionMethods;
+        init = function() {
+          compileTemplate();
+          setupViewActionMethods();
+          setupPopupTogglingEvents();
+          if (elem.prop('tagName') !== 'INPUT' || attrs.type !== 'date') {
+            setupNonInputEvents();
+            return setupNonInputValidatorAndFormatter();
+          }
+        };
+        setupNonInputValidatorAndFormatter = function() {
+          ngModelCtrl.$formatters.unshift(aaDateUtil.convertToDate);
+          return ngModelCtrl.$validators.date = function(modelValue, viewValue) {
+            return angular.isDate(viewValue);
+          };
+        };
+        compileTemplate = function() {
+          var $popup, popupDiv, tmpl;
+          elem.wrap("<div class='aa-date-input'></div>");
+          tmpl = "<div class='aa-datepicker-popup' data-ng-show='isOpen'>\n  <div class='aa-datepicker-popup-close' data-ng-click='closePopup()'></div>\n  <div data-aa-calendar ng-model='ngModel'></div>\n</div>";
+          popupDiv = angular.element(tmpl);
+          $popup = $compile(popupDiv)(scope);
+          return elem.after($popup);
+        };
+        setupPopupTogglingEvents = function() {
+          var $wrapper, onDocumentClick, wrapperClicked;
+          wrapperClicked = false;
+          elem.on('focus', function(e) {
+            if (!scope.isOpen) {
+              return scope.$apply(function() {
+                return scope.openPopup();
+              });
+            }
+          });
+          $wrapper = elem.parent();
+          $wrapper.on('mousedown', function(e) {
+            wrapperClicked = true;
+            return setTimeout(function() {
+              return wrapperClicked = false;
+            }, 100);
+          });
+          elem.on('blur', function(e) {
+            if (scope.isOpen && !wrapperClicked) {
+              return scope.$apply(function() {
+                return scope.closePopup();
+              });
+            }
+          });
+          onDocumentClick = function(e) {
+            if (scope.isOpen && !wrapperClicked) {
+              return scope.$apply(function() {
+                return scope.closePopup();
+              });
+            }
+          };
+          angular.element(window.document).on('mousedown', onDocumentClick);
+          return scope.$on('$destroy', function() {
+            elem.off('focus');
+            elem.off('blur');
+            $wrapper.off('mousedown');
+            return document.off('mousedown', onDocumentClick);
+          });
+        };
+        setupNonInputEvents = function() {
+          elem.on('click', function(e) {
+            if (!scope.isOpen) {
+              return scope.$apply(function() {
+                return scope.openPopup();
+              });
+            }
+          });
+          return scope.$on('$destroy', function() {
+            return elem.off('click');
+          });
+        };
+        setupViewActionMethods = function() {
+          scope.openPopup = function() {
+            return scope.isOpen = true;
+          };
+          return scope.closePopup = function() {
+            return scope.isOpen = false;
+          };
+        };
+        return init();
       }
     };
-  });
+  }]);
 
 }).call(this);
 

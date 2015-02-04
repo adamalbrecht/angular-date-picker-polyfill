@@ -11,3 +11,9 @@ angular.module('angular-date-picker-polyfill')
       (d1.getFullYear() == d2.getFullYear()) &&
         (d1.getMonth() == d2.getMonth())
 
+    convertToDate: (val) ->
+      if angular.isDate(val)
+        val
+      else
+        d = Date.parse(val)
+        if angular.isDate(d) then d else null

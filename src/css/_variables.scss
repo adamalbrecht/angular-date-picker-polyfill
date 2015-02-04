@@ -34,7 +34,7 @@ $arrow-hover-bg-color: $disabled-bg-color !default;
 $arrow-hover-border: none !default;
 
 // Calendar wrapper
-$calendar-wrapper-padding: 5px;
+$calendar-wrapper-padding: 0;
 $calendar-border: none !default;
 $calendar-bg: #fff !default;
 
@@ -78,5 +78,5 @@ $today-cell-hover-bg-color: darken($today-cell-bg-color, 10%);
 
 // Popup
 $popup-bg-color: #fff !default;
-$popup-padding: 10px !default;
+$popup-padding: 20px 10px 10px !default;
 $popup-border: solid 1px $light-gray !default;

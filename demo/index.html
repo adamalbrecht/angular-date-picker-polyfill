@@ -2,8 +2,8 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-  <title>Angular Date Input Polyfill</title>
-  <link rel="stylesheet" type="text/css" href="../dist/angular-date-picker-polyfill.css">
+  <title>Angular Date Picker Polyfill</title>
+  <link rel="stylesheet" type="text/css" href="../dist/angular-date-picker-polyfill-basic.css">
   <style type="text/css" media="all">
     body { font-family: arial; }
   </style>
@@ -16,7 +16,14 @@
         <div aa-calendar ng-model='myCalendarDate'></div>
       <p>
         <label>My Date Field</label>
-        <input type='date' data-ng-model='myDate' />
+        <input type='date' data-ng-model='myDate' aa-datepicker-input />
+      </p>
+      <p>
+        <label>My Date Field 2</label>
+        <button ng-model='myDate2' type='button' tabindex='0' aa-datepicker-input>
+          <span ng-show='myDate2'>{{ myDate2 | date:'shortDate'}}</span>
+          <span ng-hide='myDate2'>Not Set</span>
+        </button>
       </p>
       <p>
         <label>My Date/Time Field</label>
@@ -42,9 +49,10 @@
   <script type="text/javascript" charset="utf-8">
     var app = angular.module('DemoApp', ['angular-date-picker-polyfill']);
     app.controller('DemoController', function($scope) {
-      $scope.myCalendarDate = new Date(2014, 10, 1);
-      $scope.myDate = null
-      $scope.myDateTime = null
+      $scope.myCalendarDate = null;
+      $scope.myDate = null;
+      $scope.myDate2 = null;
+      $scope.myDateTime = null;
       $scope.displayType = function(model) {
         var rawType = typeof(model);
         if ((model == null) || (model == undefined)) {

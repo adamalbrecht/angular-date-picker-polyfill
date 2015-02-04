@@ -1,0 +1,33 @@
+.aa-datepicker-popup {
+  border: $popup-border;
+  padding: $popup-padding;
+  position: absolute;
+  background-color: $popup-bg-color;
+  box-shadow: 3px 3px 10px 0 rgba(#000, 0.4);
+  top: 22px;
+  left: 0px;
+  z-index: 10000;
+
+  &-close {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 110%;
+    cursor: pointer;
+    padding: 4px;
+    &:hover {
+      background-color: $light-gray;
+    }
+    &:before {
+      content: "\d7";
+      position: absolute;
+      top: -2px;
+    }
+  }
+
+  .aa-timepicker {
+    text-align: center;
+  }
+}

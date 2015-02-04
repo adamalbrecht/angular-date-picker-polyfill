@@ -1,7 +1,7 @@
 // Calendar Wrapper
 .aa-cal {
   padding: $calendar-wrapper-padding;
-  border: solid 1px $light-border-color;
+  border: $calendar-border;
   display: inline-block;
   font-family: $font-family;
   font-size: $font-size;
@@ -78,6 +78,9 @@ table.aa-cal-month {
     cursor: pointer;
     // Dates from the previous or next month
     // that show up in the first and last week
+    span {
+      border: 1px solid $cell-bg-color;
+    }
     &.aa-cal-other-month {
       color: $other-month-cell-color;
       background-color: $other-month-cell-bg-color;

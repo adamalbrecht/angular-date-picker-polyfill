@@ -1,9 +1,22 @@
 .aa-date-input {
-  display: inline; }
+  display: inline-block;
+  position: relative; }
+
+.aa-date-input-cover {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  z-index: 1;
+  width: 100%;
+  background-color: #fff;
+  border: solid 1px #ccc;
+  padding: 2px 5px; }
 
 .aa-cal {
-  padding: 5px;
-  border: solid 1px #e6e6e6;
+  padding: 0;
+  border: none;
   display: inline-block;
   font-family: inherit;
   font-size: auto;
@@ -68,6 +81,8 @@ table.aa-cal-month {
     background-color: #fff;
     color: #333;
     cursor: pointer; }
+    table.aa-cal-month td span {
+      border: 1px solid #fff; }
     table.aa-cal-month td.aa-cal-other-month {
       color: #999;
       background-color: #eee;
@@ -119,3 +134,30 @@ table.aa-cal-month {
       background-color: #e6e6e6; }
       table.aa-cal-month td:hover span {
         border-color: #e6e6e6; }
+
+.aa-datepicker-popup {
+  border: solid 1px #e6e6e6;
+  padding: 20px 10px 10px;
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.4);
+  top: 22px;
+  left: 0px;
+  z-index: 10000; }
+  .aa-datepicker-popup-close {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 110%;
+    cursor: pointer;
+    padding: 4px; }
+    .aa-datepicker-popup-close:hover {
+      background-color: #e6e6e6; }
+    .aa-datepicker-popup-close:before {
+      content: "\d7";
+      position: absolute;
+      top: -2px; }
+  .aa-datepicker-popup .aa-timepicker {
+    text-align: center; }

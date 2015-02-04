@@ -21,7 +21,7 @@ gulp.task 'stylesheets', ->
       outputStyle: 'nested',
       errLogToConsole: true
     }))
-    .pipe($.concat("#{packageName}.css"))
+    .pipe($.rename({prefix: packageName + "-"}))
     .pipe(gulp.dest('dist'))
     .pipe($.minifyCss())
     .pipe($.rename({suffix: '.min'}))
