@@ -55,8 +55,6 @@ And if you want to apply it to other elements, just add the `aa-date-time-input`
 </button>
 ```
 
-
-
 ## Theming
 
 There is a very basic theme provided. Others may be added later and I would love for others to contribute additional ones.
@@ -91,7 +89,7 @@ npm run spec
 
 ## Contributing
 
-Contributions are welcome. Whenever possible, please include test coverage with your contribution.
+Contributions are welcome. Non-CSS changes that don't include test coverage will not be merged.
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
