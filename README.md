@@ -40,7 +40,7 @@ And if you want to use it on a non-input element, you can do something like the 
 
 Note the `tabindex` attribute. This will allow the button (or any other element) to gain focus like a normal form field.
 
-Support for inputs of type `datetime-local` is coming soon.
+**Support for inputs of type `datetime-local` is coming soon.**
 
 ## Theming
 
@@ -54,8 +54,9 @@ Coming Soon
 
 ### Requirements:
 
-* NPM
-* gulp
+* [NPM](https://www.npmjs.com)
+* [Gulp](http://gulpjs.com)
+* [PhantomJS](http://phantomjs.org)
 
 After cloning the repository, run the following to install the dependencies:
 
