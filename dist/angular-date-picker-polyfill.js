@@ -8,7 +8,7 @@
     return {
       restrict: 'A',
       replace: true,
-      require: '^ngModel',
+      require: 'ngModel',
       link: function(scope, elem, attrs, ngModelCtrl) {
         var pullMonthDateFromModel, refreshView;
         scope.dayAbbreviations = ['S', 'M', 'T', 'W', 'R', 'F', 'S'];
@@ -38,7 +38,8 @@
           if (!aaDateUtil.dateObjectsAreEqualToMonth(d, scope.monthDate)) {
             pullMonthDateFromModel();
           }
-          return refreshView();
+          refreshView();
+          return scope.$emit('aa:calendar:set-date');
         };
         scope.setToToday = function() {
           return scope.setDate(new Date());
@@ -88,101 +89,130 @@
 }).call(this);
 
 (function() {
-  angular.module('angular-date-picker-polyfill').directive('aaDatepickerInput', ["$compile", "aaDateUtil", function($compile, aaDateUtil) {
+  var linker;
+
+  linker = function(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil) {
+    var compileTemplate, init, setupNonInputEvents, setupNonInputValidatorAndFormatter, setupPopupTogglingEvents, setupViewActionMethods;
+    init = function() {
+      compileTemplate();
+      setupViewActionMethods();
+      setupPopupTogglingEvents();
+      if (elem.prop('tagName') !== 'INPUT' || attrs.type !== 'date') {
+        setupNonInputEvents();
+        return setupNonInputValidatorAndFormatter();
+      }
+    };
+    setupNonInputValidatorAndFormatter = function() {
+      ngModelCtrl.$formatters.unshift(aaDateUtil.convertToDate);
+      return ngModelCtrl.$validators.date = function(modelValue, viewValue) {
+        return angular.isDate(viewValue);
+      };
+    };
+    compileTemplate = function() {
+      var $popup, popupDiv, tmpl;
+      elem.wrap("<div class='aa-date-input'></div>");
+      tmpl = "<div class='aa-datepicker-popup' data-ng-show='isOpen'>\n  <div class='aa-datepicker-popup-close' data-ng-click='closePopup()'></div>\n  <div data-aa-calendar ng-model='ngModel'></div>\n</div>";
+      popupDiv = angular.element(tmpl);
+      $popup = $compile(popupDiv)(scope);
+      return elem.after($popup);
+    };
+    setupPopupTogglingEvents = function() {
+      var $wrapper, onDocumentClick, wrapperClicked;
+      scope.$on('aa:calendar:set-date', function() {
+        return scope.closePopup();
+      });
+      wrapperClicked = false;
+      elem.on('focus', function(e) {
+        if (!scope.isOpen) {
+          return scope.$apply(function() {
+            return scope.openPopup();
+          });
+        }
+      });
+      $wrapper = elem.parent();
+      $wrapper.on('mousedown', function(e) {
+        wrapperClicked = true;
+        return setTimeout(function() {
+          return wrapperClicked = false;
+        }, 100);
+      });
+      elem.on('blur', function(e) {
+        if (scope.isOpen && !wrapperClicked) {
+          return scope.$apply(function() {
+            return scope.closePopup();
+          });
+        }
+      });
+      onDocumentClick = function(e) {
+        if (scope.isOpen && !wrapperClicked) {
+          return scope.$apply(function() {
+            return scope.closePopup();
+          });
+        }
+      };
+      angular.element(window.document).on('mousedown', onDocumentClick);
+      return scope.$on('$destroy', function() {
+        elem.off('focus');
+        elem.off('blur');
+        $wrapper.off('mousedown');
+        return document.off('mousedown', onDocumentClick);
+      });
+    };
+    setupNonInputEvents = function() {
+      elem.on('click', function(e) {
+        if (!scope.isOpen) {
+          return scope.$apply(function() {
+            return scope.openPopup();
+          });
+        }
+      });
+      return scope.$on('$destroy', function() {
+        return elem.off('click');
+      });
+    };
+    setupViewActionMethods = function() {
+      scope.openPopup = function() {
+        return scope.isOpen = true;
+      };
+      return scope.closePopup = function() {
+        return scope.isOpen = false;
+      };
+    };
+    return init();
+  };
+
+  angular.module('angular-date-picker-polyfill').directive('aaDateInput', ["$compile", "aaDateUtil", function($compile, aaDateUtil) {
     return {
       restrict: 'A',
-      require: '^ngModel',
+      require: 'ngModel',
       scope: {
         ngModel: '='
       },
       link: function(scope, elem, attrs, ngModelCtrl) {
-        var compileTemplate, init, setupNonInputEvents, setupNonInputValidatorAndFormatter, setupPopupTogglingEvents, setupViewActionMethods;
-        init = function() {
-          compileTemplate();
-          setupViewActionMethods();
-          setupPopupTogglingEvents();
-          if (elem.prop('tagName') !== 'INPUT' || attrs.type !== 'date') {
-            setupNonInputEvents();
-            return setupNonInputValidatorAndFormatter();
-          }
-        };
-        setupNonInputValidatorAndFormatter = function() {
-          ngModelCtrl.$formatters.unshift(aaDateUtil.convertToDate);
-          return ngModelCtrl.$validators.date = function(modelValue, viewValue) {
-            return angular.isDate(viewValue);
-          };
-        };
-        compileTemplate = function() {
-          var $popup, popupDiv, tmpl;
-          elem.wrap("<div class='aa-date-input'></div>");
-          tmpl = "<div class='aa-datepicker-popup' data-ng-show='isOpen'>\n  <div class='aa-datepicker-popup-close' data-ng-click='closePopup()'></div>\n  <div data-aa-calendar ng-model='ngModel'></div>\n</div>";
-          popupDiv = angular.element(tmpl);
-          $popup = $compile(popupDiv)(scope);
-          return elem.after($popup);
-        };
-        setupPopupTogglingEvents = function() {
-          var $wrapper, onDocumentClick, wrapperClicked;
-          wrapperClicked = false;
-          elem.on('focus', function(e) {
-            if (!scope.isOpen) {
-              return scope.$apply(function() {
-                return scope.openPopup();
-              });
-            }
-          });
-          $wrapper = elem.parent();
-          $wrapper.on('mousedown', function(e) {
-            wrapperClicked = true;
-            return setTimeout(function() {
-              return wrapperClicked = false;
-            }, 100);
-          });
-          elem.on('blur', function(e) {
-            if (scope.isOpen && !wrapperClicked) {
-              return scope.$apply(function() {
-                return scope.closePopup();
-              });
-            }
-          });
-          onDocumentClick = function(e) {
-            if (scope.isOpen && !wrapperClicked) {
-              return scope.$apply(function() {
-                return scope.closePopup();
-              });
-            }
-          };
-          angular.element(window.document).on('mousedown', onDocumentClick);
-          return scope.$on('$destroy', function() {
-            elem.off('focus');
-            elem.off('blur');
-            $wrapper.off('mousedown');
-            return document.off('mousedown', onDocumentClick);
-          });
-        };
-        setupNonInputEvents = function() {
-          elem.on('click', function(e) {
-            if (!scope.isOpen) {
-              return scope.$apply(function() {
-                return scope.openPopup();
-              });
-            }
-          });
-          return scope.$on('$destroy', function() {
-            return elem.off('click');
-          });
-        };
-        setupViewActionMethods = function() {
-          scope.openPopup = function() {
-            return scope.isOpen = true;
-          };
-          return scope.closePopup = function() {
-            return scope.isOpen = false;
-          };
-        };
-        return init();
+        return linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil);
       }
     };
   }]);
+
+  if (!Modernizr.inputtypes.date) {
+    angular.module('angular-date-picker-polyfill').directive('input', ["$compile", "aaDateUtil", function($compile, aaDateUtil) {
+      return {
+        restrict: 'E',
+        require: '?ngModel',
+        scope: {
+          ngModel: '='
+        },
+        compile: function(elem, attrs) {
+          if (!(attrs.type === 'date' && attrs.ngModel)) {
+            return;
+          }
+          return function(scope, elem, attrs, ngModelCtrl) {
+            return linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil);
+          };
+        }
+      };
+    }]);
+  }
 
 }).call(this);
 

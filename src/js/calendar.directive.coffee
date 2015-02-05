@@ -4,7 +4,7 @@ angular.module('angular-date-picker-polyfill')
     {
       restrict: 'A',
       replace: true,
-      require: '^ngModel',
+      require: 'ngModel',
       link: (scope, elem, attrs, ngModelCtrl) ->
         scope.dayAbbreviations = ['S', 'M', 'T', 'W', 'R', 'F', 'S']
         # Nested array of the dates in the month
@@ -45,6 +45,7 @@ angular.module('angular-date-picker-polyfill')
           unless aaDateUtil.dateObjectsAreEqualToMonth(d, scope.monthDate)
             pullMonthDateFromModel()
           refreshView()
+          scope.$emit('aa:calendar:set-date')
 
         scope.setToToday = ->
           scope.setDate(new Date())

@@ -16,12 +16,12 @@
         <div aa-calendar ng-model='myCalendarDate'></div>
       <p>
         <label>My Date Field</label>
-        <input type='date' data-ng-model='myDate' aa-datepicker-input />
+        <input type='date' data-ng-model='myDate' />
       </p>
       <p>
         <label>My Date Field 2</label>
-        <button ng-model='myDate2' type='button' tabindex='0' aa-datepicker-input>
-          <span ng-show='myDate2'>{{ myDate2 | date:'shortDate'}}</span>
+        <button ng-model='myDate2' type='button' tabindex='0' aa-date-input>
+          <span ng-show='myDate2' ng-bind="myDate2 | date:'shortDate'"></span>
           <span ng-hide='myDate2'>Not Set</span>
         </button>
       </p>
@@ -44,13 +44,14 @@
       <li>My Date/Time Field: {{displayType(myDateTime)}}</li>
     </ul>
   </div>
+  <script src="../vendor/bower/modernizr/modernizr.js" type="text/javascript" charset="utf-8"></script>
   <script src="../vendor/bower/angular/angular.js" type="text/javascript" charset="utf-8"></script>
   <script src="../dist/angular-date-picker-polyfill.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" charset="utf-8">
     var app = angular.module('DemoApp', ['angular-date-picker-polyfill']);
     app.controller('DemoController', function($scope) {
       $scope.myCalendarDate = null;
-      $scope.myDate = null;
+      $scope.myDate = new Date();
       $scope.myDate2 = null;
       $scope.myDateTime = null;
       $scope.displayType = function(model) {
