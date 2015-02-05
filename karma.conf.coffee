@@ -12,11 +12,12 @@ module.exports = (config) ->
       }
       transformPath: (path) -> path.replace(/\.js$/, '.coffee')
     }
-    reporters: ['progress']
+    reporters: ['progress', 'osx'],
     files: [
-      "vendor/bower/jquery/dist/jquery.min.js"
-      "vendor/bower/lodash/lodash.js"
-      "vendor/bower/angular/angular.js"
-      "vendor/bower/angular-mocks/angular-mocks.js"
+      "vendor/bower/modernizr/modernizr.js",
+      "vendor/bower/jquery/dist/jquery.min.js",
+      "vendor/bower/lodash/lodash.js",
+      "vendor/bower/angular/angular.js",
+      "vendor/bower/angular-mocks/angular-mocks.js",
       "src/js/**/*.coffee"
     ]

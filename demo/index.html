@@ -14,6 +14,9 @@
       <p>
         <label>Calendar Field</label>
         <div aa-calendar ng-model='myCalendarDate'></div>
+        <br/>
+        <br/>
+        <button type='button' ng-click='setCalendarDateToNull()'>Set to Null</button>
       <p>
         <label>My Date Field</label>
         <input type='date' data-ng-model='myDate' />
@@ -50,7 +53,8 @@
   <script type="text/javascript" charset="utf-8">
     var app = angular.module('DemoApp', ['angular-date-picker-polyfill']);
     app.controller('DemoController', function($scope) {
-      $scope.myCalendarDate = null;
+      $scope.myCalendarDate = new Date(2015, 6, 5);
+      $scope.setCalendarDateToNull = function() { $scope.myCalendarDate = null; };
       $scope.myDate = new Date();
       $scope.myDate2 = null;
       $scope.myDateTime = null;

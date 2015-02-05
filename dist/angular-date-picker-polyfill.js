@@ -11,7 +11,7 @@
       require: 'ngModel',
       link: function(scope, elem, attrs, ngModelCtrl) {
         var pullMonthDateFromModel, refreshView;
-        scope.dayAbbreviations = ['S', 'M', 'T', 'W', 'R', 'F', 'S'];
+        scope.dayAbbreviations = ['Su', 'M', 'T', 'W', 'R', 'F', 'S'];
         scope.monthArray = [[]];
         scope.monthDate = null;
         scope.selected = null;
