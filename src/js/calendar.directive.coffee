@@ -1,10 +1,11 @@
-# <div ng-date-picker-polyfill-calendar></div>
+# <div ng-model='myDate' aa-calendar></div>
 angular.module('angular-date-picker-polyfill')
   .directive 'aaCalendar', (aaMonthUtil, aaDateUtil, $filter) ->
     {
       restrict: 'A',
       replace: true,
       require: 'ngModel',
+      scope: {},
       link: (scope, elem, attrs, ngModelCtrl) ->
         scope.dayAbbreviations = ['Su', 'M', 'T', 'W', 'R', 'F', 'S']
         # Nested array of the dates in the month
@@ -41,7 +42,11 @@ angular.module('angular-date-picker-polyfill')
         # View Actions
         # ============================================
         scope.setDate = (d) ->
-          ngModelCtrl.$setViewValue(d)
+          c = if angular.isDate(ngModelCtrl.$viewValue) then angular.copy(ngModelCtrl.$viewValue) else new Date()
+          c.setYear(d.getFullYear())
+          c.setMonth(d.getMonth())
+          c.setDate(d.getDate())
+          ngModelCtrl.$setViewValue(c)
           unless aaDateUtil.dateObjectsAreEqualToMonth(d, scope.monthDate)
             pullMonthDateFromModel()
           refreshView()

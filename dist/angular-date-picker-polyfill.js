@@ -9,6 +9,7 @@
       restrict: 'A',
       replace: true,
       require: 'ngModel',
+      scope: {},
       link: function(scope, elem, attrs, ngModelCtrl) {
         var pullMonthDateFromModel, refreshView;
         scope.dayAbbreviations = ['Su', 'M', 'T', 'W', 'R', 'F', 'S'];
@@ -34,7 +35,12 @@
           return scope.monthArray = aaMonthUtil.generateMonthArray(scope.monthDate.getFullYear(), scope.monthDate.getMonth(), ngModelCtrl.$viewValue);
         };
         scope.setDate = function(d) {
-          ngModelCtrl.$setViewValue(d);
+          var c;
+          c = angular.isDate(ngModelCtrl.$viewValue) ? angular.copy(ngModelCtrl.$viewValue) : new Date();
+          c.setYear(d.getFullYear());
+          c.setMonth(d.getMonth());
+          c.setDate(d.getDate());
+          ngModelCtrl.$setViewValue(c);
           if (!aaDateUtil.dateObjectsAreEqualToMonth(d, scope.monthDate)) {
             pullMonthDateFromModel();
           }
@@ -82,6 +88,15 @@
             return null;
           }
         }
+      },
+      todayStart: function() {
+        var d;
+        d = new Date();
+        d.setHours(0);
+        d.setMinutes(0);
+        d.setSeconds(0);
+        d.setMilliseconds(0);
+        return d;
       }
     };
   });
@@ -250,6 +265,128 @@
         }
         return arr;
       }
+    };
+  }]);
+
+}).call(this);
+
+(function() {
+  angular.module('angular-date-picker-polyfill').factory('aaTimeUtil', function() {
+    return {
+      getMinuteAndHourFromDate: function(d, useAmPmHours) {
+        var amPm, h, m;
+        if (useAmPmHours == null) {
+          useAmPmHours = true;
+        }
+        if (!angular.isDate(d)) {
+          return null;
+        }
+        h = d.getHours();
+        amPm = null;
+        if (useAmPmHours) {
+          switch (false) {
+            case h !== 0:
+              h = 12;
+              amPm = 'AM';
+              break;
+            case h !== 12:
+              amPm = 'PM';
+              break;
+            case !(h > 12):
+              h = h - 12;
+              amPm = 'PM';
+          }
+        }
+        m = d.getMinutes();
+        return [h, m, amPm];
+      },
+      applyTimeValuesToDateObject: function(timeValues, d) {
+        var amPm, hour, minute;
+        hour = timeValues[0], minute = timeValues[1], amPm = timeValues[2];
+        d.setMinutes(minute);
+        if (amPm === 'AM') {
+          d.setHours(hour === 12 ? 0 : hour);
+        } else if (amPm === 'PM' && hour === 12) {
+          d.setHours(12);
+        } else if (amPm === 'PM' && hour !== 12) {
+          d.setHours(hour + 12);
+        } else {
+          d.setHours(hour);
+        }
+        return d;
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('angular-date-picker-polyfill').directive('aaTimepicker', ["aaTimeUtil", "aaDateUtil", function(aaTimeUtil, aaDateUtil) {
+    return {
+      restrict: 'A',
+      replace: true,
+      require: 'ngModel',
+      scope: {},
+      link: function(scope, elem, attrs, ngModelCtrl) {
+        var init, pullTimeFromModel, resetToNull, setupSelectOptions;
+        init = function() {
+          setupSelectOptions();
+          return resetToNull();
+        };
+        setupSelectOptions = function() {
+          var _i, _j, _results, _results1;
+          scope.useAmPm = attrs.useAmPm != null ? attrs.useAmPm === true || attrs.useAmPm === 'true' : true;
+          scope.hourOptions = scope.useAmPm ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] : (function() {
+            _results = [];
+            for (_i = 0; _i <= 23; _i++){ _results.push(_i); }
+            return _results;
+          }).apply(this);
+          scope.minuteOptions = (function() {
+            _results1 = [];
+            for (_j = 0; _j <= 59; _j++){ _results1.push(_j); }
+            return _results1;
+          }).apply(this);
+          return scope.amPmOptions = ['AM', 'PM'];
+        };
+        resetToNull = function() {
+          scope.hour = null;
+          scope.minute = null;
+          return scope.amPm = null;
+        };
+        ngModelCtrl.$render = function() {
+          return pullTimeFromModel();
+        };
+        pullTimeFromModel = function() {
+          var d, _ref;
+          if (angular.isDate(ngModelCtrl.$viewValue)) {
+            d = angular.copy(ngModelCtrl.$viewValue);
+            return _ref = aaTimeUtil.getMinuteAndHourFromDate(d, scope.useAmPm), scope.hour = _ref[0], scope.minute = _ref[1], scope.amPm = _ref[2], _ref;
+          } else {
+            return resetToNull();
+          }
+        };
+        scope.setTimeFromFields = function() {
+          var d;
+          if ((scope.hour != null) && (scope.minute == null)) {
+            scope.minute = 0;
+          }
+          if ((scope.hour != null) && scope.useAmPm && (scope.amPm == null)) {
+            scope.amPm = 'AM';
+          }
+          if (!((scope.hour != null) && (scope.minute != null) && (!scope.useAmPm || (scope.amPm != null)))) {
+            return;
+          }
+          if ((ngModelCtrl.$viewValue != null) && angular.isDate(ngModelCtrl.$viewValue)) {
+            d = new Date(ngModelCtrl.$viewValue);
+          } else {
+            d = aaDateUtil.todayStart();
+          }
+          aaTimeUtil.applyTimeValuesToDateObject([scope.hour, parseInt(scope.minute), scope.amPm], d);
+          return ngModelCtrl.$setViewValue(d);
+        };
+        return init();
+      },
+      template: "<div class='aa-timepicker'>\n  <select\n    class='aa-timepicker-hour'\n    ng-model='hour'\n    ng-options='hour as hour for hour in ::hourOptions'\n    ng-change='setTimeFromFields()'>\n  </select>\n  <select\n    class='aa-timepicker-minute'\n    ng-model='minute'\n    ng-options=\"min as ((min < 10) ? ('0' + min) : ('' + min)) for min in ::minuteOptions\"\n    ng-change='setTimeFromFields()'>\n  </select>\n  <select\n    class='aa-timepicker-ampm'\n    ng-show='useAmPm'\n    ng-model='amPm'\n    ng-options='v for v in ::amPmOptions'\n    ng-change='setTimeFromFields()'>\n  </select>\n</div>"
     };
   }]);
 

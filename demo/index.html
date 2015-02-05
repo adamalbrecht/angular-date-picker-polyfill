@@ -17,6 +17,11 @@
         <br/>
         <br/>
         <button type='button' ng-click='setCalendarDateToNull()'>Set to Null</button>
+      </p>
+      <p>
+        <label>Time Field</label>
+        <div aa-timepicker ng-model='myTimepickerDate' use-am-pm='true'></div>
+      </p>
       <p>
         <label>My Date Field</label>
         <input type='date' data-ng-model='myDate' />
@@ -36,7 +41,7 @@
     <br/>
     <strong>Raw Values:</strong>
     <ul>
-      <li>My Calendar Field: {{myCalendarDate}}</li>
+      <li>My Calendar Field: {{myCalendarDate | date:'short'}}</li>
       <li>My Date Field: {{myDate}}</li>
       <li>My Date/Time Field: {{myDateTime}}</li>
     </ul>
@@ -54,6 +59,7 @@
     var app = angular.module('DemoApp', ['angular-date-picker-polyfill']);
     app.controller('DemoController', function($scope) {
       $scope.myCalendarDate = new Date(2015, 6, 5);
+      $scope.myTimepickerDate = new Date();
       $scope.setCalendarDateToNull = function() { $scope.myCalendarDate = null; };
       $scope.myDate = new Date();
       $scope.myDate2 = null;

@@ -44,8 +44,8 @@ describe 'aaCalendar', ->
       cell = cal.getDateCell(0, 0)
       expect($(cell).text().trim()).toEqual('1')
 
-  describe 'a calendar set to April 9, 2015', ->
-    beforeEach -> cal = buildCalendar(new Date(2015, 3, 9))
+  describe 'a calendar set to April 9, 2015 at 14:30', ->
+    beforeEach -> cal = buildCalendar(new Date(2015, 3, 9, 14, 30))
     it 'shows the month name and year', ->
       expect(cal.getMonthName()).toEqual 'April 2015'
 
@@ -112,6 +112,10 @@ describe 'aaCalendar', ->
       it 'updates the selected date model to April 15', ->
         expect(scope.myDate.getMonth()).toEqual(3)
         expect(scope.myDate.getDate()).toEqual(15)
+
+      it 'does not update the time', ->
+        expect(scope.myDate.getHours()).toEqual(14)
+        expect(scope.myDate.getMinutes()).toEqual(30)
 
       it 'applies the selected class to the cell and no other cells', ->
         expect(cal.getDateCell(2, 3).hasClass('aa-cal-selected')).toBeTruthy()
