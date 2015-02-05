@@ -23,7 +23,7 @@ Next, it will simply work for any date inputs in your app:
 
 Angular 1.3 has built-in support for date inputs and takes care of setting validity on the field. But note that your model must be a javascript date object. It will not parse dates for you.
 
-If you want to apply it to a normal text field, you can just add the `aa-date-input` attribute like so:
+If you want to apply it to a normal text field, or if you don't want to use native datepickers, you can just add the `aa-date-input` attribute like so:
 
 ```html
 <input type='text' ng-model='myDate' aa-date-input />
@@ -40,15 +40,30 @@ And if you want to use it on a non-input element, you can do something like the 
 
 Note the `tabindex` attribute. This will allow the button (or any other element) to gain focus like a normal form field.
 
-**Support for inputs of type `datetime-local` is coming soon.**
+It works similarly for Date/Time. It will automatically work for inputs of type `datetime-local`.
+
+```html
+<input type='datetime-local' ng-model='myDate' />
+```
+
+And if you want to apply it to other elements, just add the `aa-date-time-input` attribute.
+
+```html
+<button type='button' tabindex='0' ng-model='myDate' aa-date-time-input>
+  <span ng-show='myDate'>{{ myDate | date:'short'}}</span>
+  <span ng-hide='myDate'>Not Set</span>
+</button>
+```
+
+
 
 ## Theming
 
 There is a very basic theme provided. Others may be added later and I would love for others to contribute additional ones.
 
-## Browser Support
+## Dev Status
 
-Coming Soon
+This is still alpha software and has not yet been well tested.
 
 ## Development
 

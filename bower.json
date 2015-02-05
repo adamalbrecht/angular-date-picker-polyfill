@@ -1,6 +1,6 @@
 {
   "name": "angular-date-picker-polyfill",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "authors": ["Adam Albrecht"],
   "description": "A date and datetime-local picker polyfill for Angular.js",
   "keywords": [
@@ -10,7 +10,7 @@
     "datetimepicker"
   ],
   "license": "MIT",
-  "private": true,
+  "main": "dist/angular-date-picker-polyfill.js",
   "ignore": [
     "src/**/.*",
     "vendor",

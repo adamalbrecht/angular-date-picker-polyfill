@@ -42,7 +42,7 @@ angular.module('angular-date-picker-polyfill')
         # View Actions
         # ============================================
         scope.setDate = (d) ->
-          c = if angular.isDate(ngModelCtrl.$viewValue) then angular.copy(ngModelCtrl.$viewValue) else new Date()
+          c = if angular.isDate(ngModelCtrl.$viewValue) then angular.copy(ngModelCtrl.$viewValue) else aaDateUtil.todayStart()
           c.setYear(d.getFullYear())
           c.setMonth(d.getMonth())
           c.setDate(d.getDate())
@@ -53,7 +53,7 @@ angular.module('angular-date-picker-polyfill')
           scope.$emit('aa:calendar:set-date')
 
         scope.setToToday = ->
-          scope.setDate(new Date())
+          scope.setDate(aaDateUtil.todayStart())
 
         scope.incrementMonths = (num) ->
           scope.monthDate.setMonth(scope.monthDate.getMonth() + num)

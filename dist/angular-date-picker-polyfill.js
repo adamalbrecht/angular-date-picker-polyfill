@@ -36,7 +36,7 @@
         };
         scope.setDate = function(d) {
           var c;
-          c = angular.isDate(ngModelCtrl.$viewValue) ? angular.copy(ngModelCtrl.$viewValue) : new Date();
+          c = angular.isDate(ngModelCtrl.$viewValue) ? angular.copy(ngModelCtrl.$viewValue) : aaDateUtil.todayStart();
           c.setYear(d.getFullYear());
           c.setMonth(d.getMonth());
           c.setDate(d.getDate());
@@ -48,7 +48,7 @@
           return scope.$emit('aa:calendar:set-date');
         };
         scope.setToToday = function() {
-          return scope.setDate(new Date());
+          return scope.setDate(aaDateUtil.todayStart());
         };
         return scope.incrementMonths = function(num) {
           scope.monthDate.setMonth(scope.monthDate.getMonth() + num);
@@ -106,27 +106,41 @@
 (function() {
   var linker;
 
-  linker = function(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil) {
+  linker = function(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil, includeTimepicker) {
     var compileTemplate, init, setupNonInputEvents, setupNonInputValidatorAndFormatter, setupPopupTogglingEvents, setupViewActionMethods;
+    if (includeTimepicker == null) {
+      includeTimepicker = false;
+    }
     init = function() {
       compileTemplate();
       setupViewActionMethods();
       setupPopupTogglingEvents();
-      if (elem.prop('tagName') !== 'INPUT' || attrs.type !== 'date') {
+      if (elem.prop('tagName') !== 'INPUT' || (attrs.type !== 'date' && attrs.type !== 'datetime-local')) {
         setupNonInputEvents();
         return setupNonInputValidatorAndFormatter();
       }
     };
     setupNonInputValidatorAndFormatter = function() {
       ngModelCtrl.$formatters.unshift(aaDateUtil.convertToDate);
-      return ngModelCtrl.$validators.date = function(modelValue, viewValue) {
-        return angular.isDate(viewValue);
-      };
+      if (includeTimepicker) {
+        return ngModelCtrl.$validators['datetime-local'] = function(modelValue, viewValue) {
+          return !viewValue || angular.isDate(viewValue);
+        };
+      } else {
+        return ngModelCtrl.$validators.date = function(modelValue, viewValue) {
+          return !viewValue || angular.isDate(viewValue);
+        };
+      }
     };
     compileTemplate = function() {
-      var $popup, popupDiv, tmpl;
+      var $popup, popupDiv, tmpl, useAmPm;
       elem.wrap("<div class='aa-date-input'></div>");
-      tmpl = "<div class='aa-datepicker-popup' data-ng-show='isOpen'>\n  <div class='aa-datepicker-popup-close' data-ng-click='closePopup()'></div>\n  <div data-aa-calendar ng-model='ngModel'></div>\n</div>";
+      tmpl = "<div class='aa-datepicker-popup' data-ng-show='isOpen'>\n  <div class='aa-datepicker-popup-close' data-ng-click='closePopup()'></div>\n  <div data-aa-calendar ng-model='ngModel'></div>";
+      if (includeTimepicker) {
+        useAmPm = attrs.useAmPm != null ? attrs.useAmPm === true || attrs.useAmPm === 'true' : true;
+        tmpl += "<div data-aa-timepicker use-am-pm='" + useAmPm + "' ng-model='ngModel'></div>";
+      }
+      tmpl += "</div>";
       popupDiv = angular.element(tmpl);
       $popup = $compile(popupDiv)(scope);
       return elem.after($popup);
@@ -134,7 +148,9 @@
     setupPopupTogglingEvents = function() {
       var $wrapper, onDocumentClick, wrapperClicked;
       scope.$on('aa:calendar:set-date', function() {
-        return scope.closePopup();
+        if (!includeTimepicker) {
+          return scope.closePopup();
+        }
       });
       wrapperClicked = false;
       elem.on('focus', function(e) {
@@ -204,7 +220,20 @@
         ngModel: '='
       },
       link: function(scope, elem, attrs, ngModelCtrl) {
-        return linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil);
+        return linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil, false);
+      }
+    };
+  }]);
+
+  angular.module('angular-date-picker-polyfill').directive('aaDateTimeInput', ["$compile", "aaDateUtil", function($compile, aaDateUtil) {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      scope: {
+        ngModel: '='
+      },
+      link: function(scope, elem, attrs, ngModelCtrl) {
+        return linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil, true);
       }
     };
   }]);
@@ -218,11 +247,11 @@
           ngModel: '='
         },
         compile: function(elem, attrs) {
-          if (!(attrs.type === 'date' && attrs.ngModel)) {
+          if (!((attrs.ngModel != null) && (attrs.type === 'date' || attrs.type === 'datetime-local'))) {
             return;
           }
           return function(scope, elem, attrs, ngModelCtrl) {
-            return linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil);
+            return linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil, attrs.type === 'datetime-local');
           };
         }
       };

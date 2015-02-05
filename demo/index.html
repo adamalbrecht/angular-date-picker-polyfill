@@ -6,6 +6,12 @@
   <link rel="stylesheet" type="text/css" href="../dist/angular-date-picker-polyfill-basic.css">
   <style type="text/css" media="all">
     body { font-family: arial; }
+    .ng-invalid-datetime-local, .ng-invalid-date {
+      border: solid 1px red;
+    }
+    form.ng-invalid-datetimelocal, form.ng-invalid-date {
+      border: 0;
+    }
   </style>
 </head>
 <body data-ng-app='DemoApp'>
@@ -14,42 +20,42 @@
       <p>
         <label>Calendar Field</label>
         <div aa-calendar ng-model='myCalendarDate'></div>
-        <br/>
-        <br/>
-        <button type='button' ng-click='setCalendarDateToNull()'>Set to Null</button>
-      </p>
       <p>
         <label>Time Field</label>
         <div aa-timepicker ng-model='myTimepickerDate' use-am-pm='true'></div>
       </p>
       <p>
-        <label>My Date Field</label>
+        <label>Date Field</label>
         <input type='date' data-ng-model='myDate' />
       </p>
       <p>
-        <label>My Date Field 2</label>
-        <button ng-model='myDate2' type='button' tabindex='0' aa-date-input>
-          <span ng-show='myDate2' ng-bind="myDate2 | date:'shortDate'"></span>
-          <span ng-hide='myDate2'>Not Set</span>
+        <label>Date/Time Field</label>
+        <input type='datetime-local' data-ng-model='myDateTime' />
+      </p>
+      <p>
+        <label>Button Date Field</label>
+        <button ng-model='myButtonDate' type='button' tabindex='0' aa-date-input>
+          <span ng-show='myButtonDate' ng-bind="myButtonDate | date:'shortDate'"></span>
+          <span ng-hide='myButtonDate'>Not Set</span>
         </button>
       </p>
       <p>
-        <label>My Date/Time Field</label>
-        <input type='datetime-local' data-ng-model='myDateTime' />
+        <label>Button Date/Time Field</label>
+        <button ng-model='myButtonDateTime' type='button' tabindex='0' aa-date-time-input use-am-pm='false'>
+          <span ng-show='myButtonDateTime' ng-bind="myButtonDateTime | date:'short'"></span>
+          <span ng-hide='myButtonDateTime'>Not Set</span>
+        </button>
       </p>
     </form>
     <br/>
-    <strong>Raw Values:</strong>
+    <strong>Values:</strong>
     <ul>
-      <li>My Calendar Field: {{myCalendarDate | date:'short'}}</li>
-      <li>My Date Field: {{myDate}}</li>
-      <li>My Date/Time Field: {{myDateTime}}</li>
-    </ul>
-    <strong>Model Types:</strong>
-    <ul>
-      <li>My Calendar Field: {{displayType(myCalendarDate)}}</li>
-      <li>My Date Field: {{displayType(myDate)}}</li>
-      <li>My Date/Time Field: {{displayType(myDateTime)}}</li>
+      <li>Calendar Field: {{myCalendarDate | date:'shortDate'}}</li>
+      <li>Time Field: {{myTimepickerDate | date:'shortTime'}}</li>
+      <li>Date Field: {{myDate | date:'shortDate'}}</li>
+      <li>Date/Time Field: {{myDateTime | date: 'short'}}</li>
+      <li>Button Date Field: {{myButtonDate | date: 'shortDate'}}</li>
+      <li>Button Date/Time Field: {{myButtonDateTime | date: 'short'}}</li>
     </ul>
   </div>
   <script src="../vendor/bower/modernizr/modernizr.js" type="text/javascript" charset="utf-8"></script>
@@ -58,27 +64,12 @@
   <script type="text/javascript" charset="utf-8">
     var app = angular.module('DemoApp', ['angular-date-picker-polyfill']);
     app.controller('DemoController', function($scope) {
-      $scope.myCalendarDate = new Date(2015, 6, 5);
-      $scope.myTimepickerDate = new Date();
-      $scope.setCalendarDateToNull = function() { $scope.myCalendarDate = null; };
-      $scope.myDate = new Date();
-      $scope.myDate2 = null;
+      $scope.myCalendarDate = null;
+      $scope.myTimepickerDate = null;
       $scope.myDateTime = null;
-      $scope.displayType = function(model) {
-        var rawType = typeof(model);
-        if ((model == null) || (model == undefined)) {
-          return 'null'
-        }
-        if (rawType == 'object') {
-          if (angular.isDate(model)) {
-            return 'date'
-          } else {
-            return rawType;
-          }
-        } else {
-          return rawType;
-        }
-      };
+      $scope.myDate = null;
+      $scope.myButtonDate = null;
+      $scope.myButtonDateTime = null;
     });
   </script>
 </body>

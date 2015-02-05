@@ -1,11 +1,11 @@
-linker = (scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil) ->
+linker = (scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil, includeTimepicker=false) ->
   # Main Function. Calls all functions below
   init = ->
     compileTemplate()
     setupViewActionMethods()
     setupPopupTogglingEvents()
 
-    if elem.prop('tagName') != 'INPUT' || attrs.type != 'date'
+    if elem.prop('tagName') != 'INPUT' || (attrs.type != 'date' && attrs.type != 'datetime-local')
       setupNonInputEvents()
       setupNonInputValidatorAndFormatter()
 
@@ -14,8 +14,12 @@ linker = (scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil) ->
   setupNonInputValidatorAndFormatter = ->
       ngModelCtrl.$formatters.unshift(aaDateUtil.convertToDate)
 
-      ngModelCtrl.$validators.date = (modelValue, viewValue) ->
-        angular.isDate(viewValue)
+      if includeTimepicker
+        ngModelCtrl.$validators['datetime-local'] = (modelValue, viewValue) ->
+          !viewValue || angular.isDate(viewValue)
+      else
+        ngModelCtrl.$validators.date = (modelValue, viewValue) ->
+          !viewValue || angular.isDate(viewValue)
 
 
   # Wrap the element in a div, then add the popup div after
@@ -25,8 +29,13 @@ linker = (scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil) ->
             <div class='aa-datepicker-popup' data-ng-show='isOpen'>
               <div class='aa-datepicker-popup-close' data-ng-click='closePopup()'></div>
               <div data-aa-calendar ng-model='ngModel'></div>
-            </div>
            """
+
+    if includeTimepicker
+      useAmPm = if attrs.useAmPm? then (attrs.useAmPm == true || attrs.useAmPm == 'true') else true
+      tmpl += "<div data-aa-timepicker use-am-pm='#{useAmPm}' ng-model='ngModel'></div>"
+
+    tmpl += "</div>"
 
     popupDiv = angular.element(tmpl)
     $popup = $compile(popupDiv)(scope)
@@ -38,7 +47,7 @@ linker = (scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil) ->
   setupPopupTogglingEvents = ->
     # Upon setting the date from the calendar, close the popup
     scope.$on 'aa:calendar:set-date', ->
-      scope.closePopup()
+      scope.closePopup() unless includeTimepicker
     wrapperClicked = false
 
     # Open on focus
@@ -106,8 +115,21 @@ angular.module('angular-date-picker-polyfill')
         ngModel: '='
       },
       link: (scope, elem, attrs, ngModelCtrl) ->
-        linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil)
+        linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil, false)
     }
+
+angular.module('angular-date-picker-polyfill')
+  .directive 'aaDateTimeInput', ($compile, aaDateUtil) ->
+    {
+      restrict: 'A',
+      require: 'ngModel',
+      scope: {
+        ngModel: '='
+      },
+      link: (scope, elem, attrs, ngModelCtrl) ->
+        linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil, true)
+    }
+
 
 
 unless Modernizr.inputtypes.date
@@ -120,7 +142,7 @@ unless Modernizr.inputtypes.date
           ngModel: '='
         },
         compile: (elem, attrs) ->
-          return unless attrs.type == 'date' && attrs.ngModel
+          return unless attrs.ngModel? && (attrs.type == 'date' || attrs.type == 'datetime-local')
           (scope, elem, attrs, ngModelCtrl) ->
-            linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil)
+            linker(scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil, (attrs.type == 'datetime-local'))
       }
