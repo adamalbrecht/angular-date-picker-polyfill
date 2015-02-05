@@ -55,6 +55,16 @@ And if you want to apply it to other elements, just add the `aa-date-time-input`
 </button>
 ```
 
+You can also use the Calendar and Timepicker inline and outside the context of the popup:
+
+```html
+<div ng-model='myDate' aa-calendar></div>
+```
+
+```html
+<div ng-model='myDate' aa-timepicker></div>
+```
+
 ## Theming
 
 There is a very basic theme provided. Others may be added later and I would love for others to contribute additional ones.

@@ -12,9 +12,17 @@
   "license": "MIT",
   "main": "dist/angular-date-picker-polyfill.js",
   "ignore": [
-    "src/**/.*",
+    "src",
+    "demo",
+    "README.md",
+    "gulpfile.*",
+    "karma.conf.coffee",
+    "package.json",
     "vendor",
-    "node_modules"
+    "node_modules",
+    ".bowerrc",
+    ".gitignore"
+
   ],
   "dependencies": {
     "angular": "~1.3.0",
