@@ -186,7 +186,7 @@
         elem.off('focus');
         elem.off('blur');
         $wrapper.off('mousedown');
-        return document.off('mousedown', onDocumentClick);
+        return angular.element(window.document).off('mousedown', onDocumentClick);
       });
     };
     setupNonInputEvents = function() {
@@ -415,7 +415,7 @@
         };
         return init();
       },
-      template: "<div class='aa-timepicker'>\n  <select\n    class='aa-timepicker-hour'\n    ng-model='hour'\n    ng-options='hour as hour for hour in ::hourOptions'\n    ng-change='setTimeFromFields()'>\n  </select>\n  <select\n    class='aa-timepicker-minute'\n    ng-model='minute'\n    ng-options=\"min as ((min < 10) ? ('0' + min) : ('' + min)) for min in ::minuteOptions\"\n    ng-change='setTimeFromFields()'>\n  </select>\n  <select\n    class='aa-timepicker-ampm'\n    ng-show='useAmPm'\n    ng-model='amPm'\n    ng-options='v for v in ::amPmOptions'\n    ng-change='setTimeFromFields()'>\n  </select>\n</div>"
+      template: "<div class='aa-timepicker'>\n  <select\n    tabindex='-1'\n    class='aa-timepicker-hour'\n    ng-model='hour'\n    ng-options='hour as hour for hour in ::hourOptions'\n    ng-change='setTimeFromFields()'>\n  </select>\n  <select\n    tabindex='-1'\n    class='aa-timepicker-minute'\n    ng-model='minute'\n    ng-options=\"min as ((min < 10) ? ('0' + min) : ('' + min)) for min in ::minuteOptions\"\n    ng-change='setTimeFromFields()'>\n  </select>\n  <select\n    tabindex='-1'\n    class='aa-timepicker-ampm'\n    ng-show='useAmPm'\n    ng-model='amPm'\n    ng-options='v for v in ::amPmOptions'\n    ng-change='setTimeFromFields()'>\n  </select>\n</div>"
     };
   }]);
 

@@ -52,18 +52,21 @@ angular.module('angular-date-picker-polyfill')
       template: """
                   <div class='aa-timepicker'>
                     <select
+                      tabindex='-1'
                       class='aa-timepicker-hour'
                       ng-model='hour'
                       ng-options='hour as hour for hour in ::hourOptions'
                       ng-change='setTimeFromFields()'>
                     </select>
                     <select
+                      tabindex='-1'
                       class='aa-timepicker-minute'
                       ng-model='minute'
                       ng-options="min as ((min < 10) ? ('0' + min) : ('' + min)) for min in ::minuteOptions"
                       ng-change='setTimeFromFields()'>
                     </select>
                     <select
+                      tabindex='-1'
                       class='aa-timepicker-ampm'
                       ng-show='useAmPm'
                       ng-model='amPm'

@@ -4,7 +4,7 @@
   position: absolute;
   background-color: $popup-bg-color;
   box-shadow: 3px 3px 10px 0 rgba(#000, 0.4);
-  top: 22px;
+  top: 100%;
   left: 0px;
   z-index: 10000;
 
@@ -14,20 +14,20 @@
     position: absolute;
     top: 4px;
     right: 4px;
-    font-size: 110%;
+    font-size: 18px;
     cursor: pointer;
-    padding: 4px;
+    line-height: 1.0;
     &:hover {
-      background-color: $light-gray;
+      // background-color: $light-gray;
+      color: $light-gray;
     }
     &:before {
       content: "\d7";
-      position: absolute;
-      top: -2px;
     }
   }
 
   .aa-timepicker {
+    padding: 5px 0;
     text-align: center;
   }
 }

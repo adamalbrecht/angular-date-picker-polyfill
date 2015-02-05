@@ -1,0 +1,16 @@
+.aa-timepicker {
+  select {
+    // Extra specific without having to resort to !important
+    &.aa-timepicker-hour, &.aa-timepicker-minute, &.aa-timepicker-ampm {
+      // Try to reset it to look as normal as possible
+      // border: 0;
+      // border-radius: 0;
+      box-shadow: none;
+      display: inline;
+      height: auto;
+      margin: auto;
+      padding: 0;
+      width: auto;
+    }
+  }
+}

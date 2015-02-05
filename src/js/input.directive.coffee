@@ -84,7 +84,7 @@ linker = (scope, elem, attrs, ngModelCtrl, $compile, aaDateUtil, includeTimepick
       elem.off 'focus'
       elem.off 'blur'
       $wrapper.off 'mousedown'
-      document.off 'mousedown', onDocumentClick
+      angular.element(window.document).off 'mousedown', onDocumentClick
 
   # Since not all events respond to focus events, add a click event
   setupNonInputEvents = ->
