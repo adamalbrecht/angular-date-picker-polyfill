@@ -1,6 +1,6 @@
 # Angular Date Picker Polyfill
 
-This is an [HTML5 date input](http://diveintohtml5.info/forms.html#type-date) polyfill for Angular.js. For browsers such as Chrome and Safari for iOS, the native datepicker will be used and this directive will have no effect, but for others it will add a datepicker popup to inputs of type `date` and `datetime-local`.
+This is an [HTML5 date input](http://diveintohtml5.info/forms.html#type-date) polyfill for Angular.js. For browsers such as Chrome and Safari for iOS, the native datepicker will be used and this directive will have no effect, but for others it will add a datepicker popup to inputs of type `date` and `datetime-local`. Or if you want your UX to be completely consistent across browsers, you can add the directive to any other type of element.
 
 ## Dependencies
 
@@ -72,6 +72,12 @@ There is a very basic theme provided. Others may be added later and I would love
 ## Dev Status
 
 This is still alpha software and has not yet been well tested.
+
+## TODO:
+
+- [ ] Better test coverage
+- [ ] Setup automatic testing using a CI service
+- [ ] Additional Themes
 
 ## Development
 
