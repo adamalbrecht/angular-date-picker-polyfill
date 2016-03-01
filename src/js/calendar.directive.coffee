@@ -7,7 +7,7 @@ angular.module('angular-date-picker-polyfill')
       require: 'ngModel',
       scope: {},
       link: (scope, elem, attrs, ngModelCtrl) ->
-        scope.dayAbbreviations = ['Su', 'M', 'T', 'W', 'R', 'F', 'S']
+        scope.dayAbbreviations = ['Su', 'M', 'T', 'W', 'Th', 'F', 'S']
         # Nested array of the dates in the month
         scope.monthArray = [[]]
         # Date representing the calendar month shown
