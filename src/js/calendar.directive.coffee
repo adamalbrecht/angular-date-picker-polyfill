@@ -50,7 +50,7 @@ angular.module('angular-date-picker-polyfill')
           unless aaDateUtil.dateObjectsAreEqualToMonth(d, scope.monthDate)
             pullMonthDateFromModel()
           refreshView()
-          scope.$emit('aa:calendar:set-date')
+          scope.$emit('aa:calendar:set-date', c)
 
         scope.setToToday = ->
           scope.setDate(aaDateUtil.todayStart())
